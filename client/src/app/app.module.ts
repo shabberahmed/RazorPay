@@ -6,7 +6,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SuccessComponent } from './success/success.component';
 import { RouterModule } from '@angular/router';
-
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -18,7 +18,8 @@ import { RouterModule } from '@angular/router';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    RouterModule
+    RouterModule,
+    CardModule
 
   ],
   providers: [],
