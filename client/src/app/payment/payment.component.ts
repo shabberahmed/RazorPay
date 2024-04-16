@@ -43,10 +43,12 @@ export class PaymentComponent implements OnInit {
       prefill: {
         name: "Ahmed-test",
         email: "test@email.com",
-        contact: "9999999999"
+        contact: "9999999999",
+        
       },
       notes: {
-        "address": "Dev Crafters (Vishakapatnam)"
+        "address": "Dev Crafters (Vishakapatnam)",
+        userId:'1998'
       },
       theme: {
         "color": "#121212"

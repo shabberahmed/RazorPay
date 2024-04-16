@@ -11,7 +11,10 @@ export class Payment extends Document {
 
   @Prop({ required: true })
   razorpay_signature: string;
-
+  @Prop()
+  payment_method:string;
+  @Prop()
+  amount:string;
   @Prop({ default: Date.now })
   createdAt: Date;
 }

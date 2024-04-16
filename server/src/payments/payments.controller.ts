@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Res,
 } from '@nestjs/common';
@@ -20,6 +22,11 @@ export class PaymentsController {
       order,
     };
   }
+  // 
+  @Get(':paymentId')
+  async getPaymentDetails(@Param('paymentId') paymentId: string) {
+    return this.paymentService.getPaymentDetails(paymentId);
+  }
   @Post('verify')
   async verifyPayment(
     @Body() paymentDetails: any,
@@ -30,10 +37,10 @@ export class PaymentsController {
         await this.paymentService.verifyPayment(paymentDetails);
       console.log(verificationResult, 'payment details');
       if (verificationResult.success) {
+        console.log("checking status",verificationResult)
         return res.redirect(
           `http://localhost:4200/payment-success?reference=${paymentDetails.razorpay_payment_id}`,
         );
-        // return { message: 'Payment verification successful' };
       } else {
         throw new HttpException(
           verificationResult.error,

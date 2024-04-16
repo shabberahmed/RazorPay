@@ -6,6 +6,7 @@ import shortid from 'shortid';
 import { Payment } from './payments.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import axios from 'axios';
 
 @Injectable()
 export class PaymentService {
@@ -43,11 +44,32 @@ export class PaymentService {
       );
     }
   }
-
+  // get payments details
+  async getPaymentDetails(paymentId: string) {
+    try {
+      const apiKey = 'rzp_test_ThVc8MYx6mxBuh'; // Replace 'your_api_key' with your actual API key
+      const apiSecret = 'm0yjv0VmP8EQftrwRXv1aMwa'; // Replace 'your_api_secret' with your actual API secret
+  
+      const response = await axios.get(`https://api.razorpay.com/v1/payments/${paymentId}`, {
+        headers: {
+          Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')}`,
+        },
+      });
+  
+      console.log("check res", response);
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error fetching payment details: ${error.message}`);
+    }
+  }
   async verifyPayment(paymentDetails: any) {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       paymentDetails;
-
+      console.log("pay details,",paymentDetails)
+     const check=await this.getPaymentDetails(razorpay_payment_id)
+     console.log("checker",check)
+    if(check.status=="captured"){
+      
     const body = razorpay_order_id + '|' + razorpay_payment_id;
 
     const expectedSignature = crypto
@@ -66,8 +88,11 @@ export class PaymentService {
         razorpay_order_id,
         razorpay_payment_id,
         razorpay_signature,
+        payment_method:check.method,
+        amount:check.amount+check.currency
       });
       return { success: true };
+    }
     } else {
       // Invalid signature
       return { success: false, error: 'Invalid signature' };
