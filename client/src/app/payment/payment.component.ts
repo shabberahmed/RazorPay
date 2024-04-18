@@ -42,8 +42,8 @@ export class PaymentComponent implements OnInit {
       callback_url: "http://localhost:3000/payments/verify",
       prefill: {
         name: "Ahmed-test",
-        email: "test@email.com",
-        contact: "9999999999",
+        email: "ahmed@email.com",
+        contact: "9000347346",
         
       },
       notes: {

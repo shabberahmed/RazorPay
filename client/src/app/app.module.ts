@@ -7,20 +7,28 @@ import { AppRoutingModule } from './app-routing.module';
 import { SuccessComponent } from './success/success.component';
 import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
-
+import { PaymentdataComponent } from './paymentdata/paymentdata.component';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { TagModule } from 'primeng/tag';
 @NgModule({
   declarations: [
     AppComponent,
     PaymentComponent,
     SuccessComponent,
+    PaymentdataComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     RouterModule,
-    CardModule
-
+    CardModule,
+    TableModule,
+    CommonModule,
+    ButtonModule,
+    TagModule
   ],
   providers: [],
   bootstrap: [AppComponent]

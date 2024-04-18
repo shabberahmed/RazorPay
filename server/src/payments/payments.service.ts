@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
@@ -27,6 +28,8 @@ export class PaymentService {
   instance(): Razorpay {
     return this.razorpay;
   }
+ apiKey = this.configService.get<string>('RAZORPAY_API_KEY');
+apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
   async createOrder(amount: number, currency: string): Promise<any> {
     try {
       const order = await this.razorpay.orders.create({
@@ -44,15 +47,13 @@ export class PaymentService {
       );
     }
   }
+ 
   // get payments details
   async getPaymentDetails(paymentId: string) {
     try {
-      const apiKey = 'rzp_test_ThVc8MYx6mxBuh'; // Replace 'your_api_key' with your actual API key
-      const apiSecret = 'm0yjv0VmP8EQftrwRXv1aMwa'; // Replace 'your_api_secret' with your actual API secret
-  
       const response = await axios.get(`https://api.razorpay.com/v1/payments/${paymentId}`, {
         headers: {
-          Authorization: `Basic ${Buffer.from(`${apiKey}:${apiSecret}`).toString('base64')}`,
+          Authorization: `Basic ${Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64')}`,
         },
       });
   
@@ -97,5 +98,21 @@ export class PaymentService {
       // Invalid signature
       return { success: false, error: 'Invalid signature' };
     }
+  }
+   // send basic auth from razorpay
+ async getBasicAuth(): Promise<string> {
+  try {
+    const response = await axios.get(`https://api.razorpay.com/v1/payments/`, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64')}`,
+      },
+    });
+
+    console.log("check res", response);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error fetching payment details: ${error.message}`);
+  }
+
   }
 }

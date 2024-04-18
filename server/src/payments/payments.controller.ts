@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -53,6 +54,16 @@ export class PaymentsController {
         'Failed to verify payment',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+  @Get('base/auth')
+  async PaymentAut(@Res() res: any):Promise<any>{
+    try{
+      const auth=await this.paymentService.getBasicAuth()
+    return res.json({auth})
+    }
+    catch(err){
+      res.json({err})
     }
   }
 }

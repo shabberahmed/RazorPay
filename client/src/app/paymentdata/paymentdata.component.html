@@ -1,0 +1,42 @@
+<div>
+    <p-table [value]="paymentsData" [tableStyle]="{'min-width': '60rem'}">
+        <ng-template pTemplate="caption">
+            <div class="flex  align-items-center justify-content-between"
+                style="display: flex; justify-content: space-between; align-items: center;">
+                <div>Transactions</div>
+                <div>
+                    <button icon="pi pi-refresh" pButton pRipple (click)="check()" [disabled]="loading"> <!-- Use 'click' event and bind disabled state to 'loading' -->
+                        <span *ngIf="!loading">Refresh</span> <!-- Show 'Refresh' text when not loading -->
+                        <span *ngIf="loading">Refreshing...</span> <!-- Show 'Refreshing...' text when loading -->
+                      </button>
+                     <!-- <button icon="pi pi-refresh " pButton pRipple (onClick)="check()"></button> -->
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Email</th>
+                <th>Contact</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Status</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-payment>
+            <tr>
+                <td>{{ payment.email }}</td>
+                <td>{{payment.contact}}</td>
+                <td>{{ payment.amount | currency:'INR':'symbol':'1.2-2' }}</td>
+                <td>{{ payment.method }}</td>
+                <td> <p-tag [value]="payment.status === 'captured' ? 'success' : payment.status"
+                        [severity]="getSeverity(payment?.status)"></p-tag>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ paymentsData ? paymentsData.length : 0 }} Transactions.
+            </div>
+        </ng-template>
+    </p-table>
+</div>
