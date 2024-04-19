@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 declare var Razorpay: any; // Declare Razorpay global variable
 
 @Component({
@@ -22,7 +22,7 @@ export class PaymentComponent implements OnInit {
     },
   ];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private router:Router) {}
   ngOnInit(): void {
     throw new Error('Method not implemented.');
   }
@@ -41,7 +41,7 @@ export class PaymentComponent implements OnInit {
       order_id: order.id,
       callback_url: "http://localhost:3000/payments/verify",
       prefill: {
-        name: "Ahmed-test",
+        name: "test 18-14-2024 7:00pm",
         email: "ahmed@email.com",
         contact: "9000347346",
         
@@ -57,6 +57,9 @@ export class PaymentComponent implements OnInit {
 
     const razor = new Razorpay(options);
     razor.open();
+  }
+  goToPaymentTable(){
+    return this.router.navigate(['/all-payments'])
   }
 
 }

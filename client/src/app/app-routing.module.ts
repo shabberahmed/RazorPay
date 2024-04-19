@@ -5,7 +5,7 @@ import { SuccessComponent } from './success/success.component';
 import { PaymentdataComponent } from './paymentdata/paymentdata.component';
 
 const routes: Routes = [
-  { path: '', component: PaymentComponent },
+  { path: '', component: PaymentComponent, pathMatch:'full' },
   { path: 'payment-success', component: SuccessComponent },
   { path: 'all-payments', component: PaymentdataComponent },
 ];

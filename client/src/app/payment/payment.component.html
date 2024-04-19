@@ -1,6 +1,6 @@
 <div>
   <div class="layout">
-
+    <div  ><p-button  (click)="goToPaymentTable()">Check Payment Table</p-button></div>
     <div *ngFor="let item of items" class="card">
       <img [src]="item.img" alt="item" style="width: 300px;height: 300px;" />
       <p>₹{{ item.amount }}</p>

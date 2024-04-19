@@ -36,9 +36,7 @@ export class PaymentsController {
     try {
       const verificationResult =
         await this.paymentService.verifyPayment(paymentDetails);
-      console.log(verificationResult, 'payment details');
       if (verificationResult.success) {
-        console.log("checking status",verificationResult)
         return res.redirect(
           `http://localhost:4200/payment-success?reference=${paymentDetails.razorpay_payment_id}`,
         );

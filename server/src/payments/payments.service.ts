@@ -57,7 +57,6 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
         },
       });
   
-      console.log("check res", response);
       return response.data;
     } catch (error) {
       throw new Error(`Error fetching payment details: ${error.message}`);
@@ -66,9 +65,7 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
   async verifyPayment(paymentDetails: any) {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       paymentDetails;
-      console.log("pay details,",paymentDetails)
      const check=await this.getPaymentDetails(razorpay_payment_id)
-     console.log("checker",check)
     if(check.status=="captured"){
       
     const body = razorpay_order_id + '|' + razorpay_payment_id;
@@ -82,7 +79,6 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
       .digest('hex');
 
     const isAuthentic = expectedSignature === razorpay_signature;
-    console.log(isAuthentic, 'check bool');
     if (isAuthentic) {
       // Payment verification successful
       await this.PaymentModel.create({
@@ -108,7 +104,6 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
       },
     });
 
-    console.log("check res", response);
     return response.data;
   } catch (error) {
     throw new Error(`Error fetching payment details: ${error.message}`);
