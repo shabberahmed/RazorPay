@@ -8,7 +8,7 @@ declare var Razorpay: any; // Declare Razorpay global variable
   templateUrl: './payment.component.html',
   styleUrls: ['./payment.component.scss']
 })
-export class PaymentComponent implements OnInit {
+export class PaymentComponent  {
   items = [
     {
       amount: 1000,
@@ -23,9 +23,6 @@ export class PaymentComponent implements OnInit {
   ];
 
   constructor(private http: HttpClient,private router:Router) {}
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
 
   async checkoutHandler(amount: number) {
     const { key } = await this.http.get<any>("http://localhost:3000/key").toPromise();
