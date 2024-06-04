@@ -33,7 +33,7 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
   async createOrder(amount: number, currency: string): Promise<any> {
     try {
       const order = await this.razorpay.orders.create({
-        amount: amount * 100, // Amount in paise
+        amount: amount * 100, 
         currency: currency,
         receipt: shortid.generate(),
         payment_capture: 1,
@@ -66,6 +66,7 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
       paymentDetails;
      const check=await this.getPaymentDetails(razorpay_payment_id)
+    //  console.log("check",check)
     if(check.status=="captured"){
       
     const body = razorpay_order_id + '|' + razorpay_payment_id;
@@ -88,26 +89,76 @@ apiSecret = this.configService.get<string>('RAZORPAY_APT_SECRET');
         payment_method:check.method,
         amount:check.amount+check.currency
       });
+      this.transferRoute(check.id,check.notes,check.amount)
       return { success: true };
     }
     } else {
-      // Invalid signature
       return { success: false, error: 'Invalid signature' };
     }
   }
    // send basic auth from razorpay
- async getBasicAuth(): Promise<string> {
-  try {
-    const response = await axios.get(`https://api.razorpay.com/v1/payments/`, {
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64')}`,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    throw new Error(`Error fetching payment details: ${error.message}`);
+   async transferRoute(paymentID: string, transferData: any, amount: number): Promise<void> {
+    try {
+      const requestBody = {
+        transfers: [
+          {
+            account: transferData.acc_id,
+            amount: amount,
+            currency: "INR",
+            notes: {
+              name: transferData.name,
+              roll_no: "IEC2011025"
+            },
+            // linked_account_notes: [
+            //   "name": "Gaurav Kumar",
+            //   "roll_no": "IEC2011025"
+            // ],
+            on_hold: false,
+          }
+        ]
+      };
+  
+      console.log('Request Body:', requestBody);
+  
+      const response = await axios.post(`https://api.razorpay.com/v1/payments/${paymentID}/transfers`, requestBody, {
+        headers: {
+          Authorization: `Basic ${Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64')}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      console.log('Response:', response.data);
+    } catch (err) {
+      if (err.response) {
+        // The request was made and the server responded with a status code that falls out of the range of 2xx
+        console.error('Error Response Data:', err.response.data);
+        console.error('Error Response Status:', err.response.status);
+        console.error('Error Response Headers:', err.response.headers);
+      } else if (err.request) {
+        // The request was made but no response was received
+        console.error('Error Request Data:', err.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error Message:', err.message);
+      }
+      console.error('Config:', err.config);
+      throw err;
+    }
   }
+  
 
-  }
+  async getBasicAuth(): Promise<string> {
+    try {
+      const response = await axios.get(`https://api.razorpay.com/v1/payments/`, {
+        headers: {
+          Authorization: `Basic ${Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64')}`,
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      throw new Error(`Error fetching payment details: ${error.message}`);
+    }
+  
+    }
 }

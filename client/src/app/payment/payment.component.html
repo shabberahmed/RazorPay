@@ -4,7 +4,7 @@
     <div *ngFor="let item of items" class="card">
       <img [src]="item.img" alt="item" style="width: 300px;height: 300px;" />
       <p>₹{{ item.amount }}</p>
-      <button (click)="checkoutHandler(item.amount)">{{item.type}}</button>
+      <button (click)="checkoutHandler(item.amount,item.transferData)">{{item.type}}</button>
     </div>
   </div>
 </div>
